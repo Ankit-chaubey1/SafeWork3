@@ -1,0 +1,119 @@
+package com.cts.api_gateway.filter;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+
+import javax.crypto.SecretKey;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
+
+    private final Environment env;
+
+    @Autowired
+    public JwtAuthenticationFilter(Environment env) {
+        super(Config.class);
+        this.env = env;
+    }
+
+    public static class Config {
+        private String allowedRoles;
+        public String getAllowedRoles() { return allowedRoles; }
+        public void setAllowedRoles(String allowedRoles) { this.allowedRoles = allowedRoles; }
+    }
+
+    @Override
+    public List<String> shortcutFieldOrder() {
+        return Arrays.asList("allowedRoles");
+    }
+
+    @Override
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
+            ServerHttpRequest request = exchange.getRequest();
+
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                return onError(exchange, "Missing Authorization Header", HttpStatus.UNAUTHORIZED);
+            }
+
+            String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return onError(exchange, "Invalid Authorization Header format", HttpStatus.UNAUTHORIZED);
+            }
+
+            String token = authHeader.substring(7).trim();
+            if (token.isEmpty()) {
+                return onError(exchange, "Empty token", HttpStatus.UNAUTHORIZED);
+            }
+
+            try {
+                String secret = env.getProperty("jwt.secret");
+                if (secret == null || secret.isBlank()) {
+                    return onError(exchange, "JWT secret not configured", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+                SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+                Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+
+                String userRole = claims.get("role", String.class);
+
+                if (config.getAllowedRoles() != null && !config.getAllowedRoles().isEmpty()) {
+                    List<String> authorizedRoles = Arrays.stream(config.getAllowedRoles().split(","))
+                            .map(String::trim)
+                            .collect(Collectors.toList());
+
+                    if (userRole == null || !authorizedRoles.contains(userRole.trim().toUpperCase())) {
+                        return onError(exchange, "Forbidden: role '" + userRole + "' not allowed", HttpStatus.FORBIDDEN);
+                    }
+                }
+
+                Object userIdObj = claims.get("userId");
+                String userId = userIdObj != null ? userIdObj.toString() : "";
+                String subject = claims.getSubject() != null ? claims.getSubject() : "";
+
+                ServerHttpRequest mutatedRequest = request.mutate()
+                        .header("X-User-Id", userId)
+                        .header("X-User-Role", userRole != null ? userRole : "")
+                        .header("X-User-Email", subject)
+                        .build();
+
+                return chain.filter(exchange.mutate().request(mutatedRequest).build());
+
+            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                return onError(exchange, "Token has expired", HttpStatus.UNAUTHORIZED);
+            } catch (io.jsonwebtoken.SignatureException e) {
+                return onError(exchange, "Invalid token signature", HttpStatus.UNAUTHORIZED);
+            } catch (Exception e) {
+                return onError(exchange, "Token validation failed: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+            }
+        };
+    }
+
+    private Mono<Void> onError(ServerWebExchange exchange, String msg, HttpStatus status) {
+        exchange.getResponse().setStatusCode(status);
+        byte[] bytes = msg.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        org.springframework.core.io.buffer.DataBuffer buffer =
+                exchange.getResponse().bufferFactory().wrap(bytes);
+        exchange.getResponse().getHeaders().add("Content-Type", "text/plain");
+        return exchange.getResponse().writeWith(Mono.just(buffer));
+    }
+}
