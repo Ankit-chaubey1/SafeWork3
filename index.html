@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeWork – Occupational Safety Platform</title>
+    <title>SafeWork - Occupational Safety & Workplace Compliance System</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* --- CSS VARIABLES & RESET --- */
@@ -82,27 +82,28 @@
     <div id="loginPage" class="login-page">
         <div class="login-left">
             <div style="margin-bottom: 40px; font-size: 12px; opacity: 0.7;">Workplace Safety Platform v2.0</div>
-            <h1 class="lh">Protect your<br>people with<br><em>SafeWork</em></h1>
-            <p style="opacity: 0.6; max-width: 400px; line-height: 1.6;">A unified platform for managing occupational hazards, compliance audits, and employee safety records.</p>
+            <h1 class="lh">SafeWork<br>Occupational Safety &<br><em>Compliance System</em></h1>
+            <p style="opacity: 0.6; max-width: 400px; line-height: 1.6;">A comprehensive platform for managing workplace safety, hazard reporting, compliance monitoring, and regulatory adherence across organizations.</p>
         </div>
         <div class="login-right">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 40px;">
                 <div class="brand-icon">🛡️</div>
-                <div class="brand-name" style="color: var(--ink);">Safe<span>Work</span></div>
+                <div class="brand-name">Safe<span>Work</span></div>
             </div>
             <h2 style="margin-bottom: 8px;">Welcome back</h2>
             <p style="color: var(--mist); margin-bottom: 30px; font-size: 13px;">Sign in to your workspace</p>
             
             <input type="email" placeholder="Email address" style="width:100%; padding: 12px; border: 1px solid var(--fog); border-radius: 8px; margin-bottom: 15px;">
             <input type="password" placeholder="Password" style="width:100%; padding: 12px; border: 1px solid var(--fog); border-radius: 8px; margin-bottom: 15px;">
-            <button class="login-btn" onclick="initApp('ADMIN', 'Admin User')">Sign in →</button>
+            <button class="login-btn" onclick="initApp('ADMIN', 'Admin')">Sign in →</button>
             
             <div style="text-align: center; margin: 25px 0; font-size: 12px; color: var(--mist);">or sign in as a role</div>
             <div class="role-grid">
-                <div class="role-card" onclick="initApp('ADMIN', 'System Admin')">🔑 Admin</div>
+                <div class="role-card" onclick="initApp('ADMIN', 'Admin')">🔑 Admin</div>
                 <div class="role-card" onclick="initApp('EMPLOYEE', 'John Doe')">👷 Employee</div>
                 <div class="role-card" onclick="initApp('SAFETY_OFFICER', 'Sara Singh')">🔍 Safety</div>
                 <div class="role-card" onclick="initApp('HAZARD_OFFICER', 'Raj Kumar')">⚠️ Hazard</div>
+                <div class="role-card" onclick="initApp('COMPLIANCE_OFFICER', 'Alex Lee')">📋 Compliance</div>
             </div>
         </div>
     </div>
@@ -138,21 +139,105 @@
             ADMIN: {
                 color: '#1C4ED8',
                 nav: [
+                    { icon: '�', label: 'Users', view: 'users' },
                     { icon: '📊', label: 'Dashboard', view: 'dashboard' },
-                    { icon: '👥', label: 'Employees', view: 'employees' },
-                    { icon: '⚠️', label: 'Hazard Reports', view: 'hazards' },
-                    { icon: '📋', label: 'Compliance', view: 'compliance' }
+                    { icon: '👷', label: 'Employees', view: 'employees' },
+                    { icon: '⚠️', label: 'Hazards', view: 'hazards' },
+                    { icon: '📋', label: 'Compliance', view: 'compliance' },
+                    { icon: '🎓', label: 'Programs', view: 'programs' },
+                    { icon: '📝', label: 'Audits', view: 'audits' },
+                    { icon: '📊', label: 'Reports', view: 'reports' }
                 ]
             },
             EMPLOYEE: {
                 color: '#16A34A',
                 nav: [
-                    { icon: '📊', label: 'My Stats', view: 'dashboard' },
+                    { icon: '📊', label: 'Dashboard', view: 'dashboard' },
                     { icon: '⚠️', label: 'Report Hazard', view: 'report_hazard' },
-                    { icon: '🎓', label: 'My Training', view: 'training' }
+                    { icon: '🎓', label: 'My Training', view: 'training' },
+                    { icon: '🚨', label: 'Hazards & Incidents', view: 'view_hazards_incidents' },
+                    { icon: '🔔', label: 'Notifications', view: 'notifications' }
+                ]
+            },
+            SAFETY_OFFICER: {
+                color: '#DC2626',
+                nav: [
+                    { icon: '📊', label: 'Dashboard', view: 'dashboard' },
+                    { icon: '🔍', label: 'Inspections', view: 'inspections' },
+                    { icon: '⚠️', label: 'Hazards', view: 'hazards' },
+                    { icon: '🚨', label: 'Incidents', view: 'incidents' },
+                    { icon: '📋', label: 'Compliance Checks', view: 'compliance_checks' }
+                ]
+            },
+            HAZARD_OFFICER: {
+                color: '#DC2626',
+                nav: [
+                    { icon: '📊', label: 'Dashboard', view: 'dashboard' },
+                    { icon: '⚠️', label: 'Hazards', view: 'hazards' },
+                    { icon: '🚨', label: 'Report Incident', view: 'report_incident' },
+                    { icon: '📋', label: 'Incidents', view: 'incidents' }
+                ]
+            },
+            COMPLIANCE_OFFICER: {
+                color: '#0D9488',
+                nav: [
+                    { icon: '📊', label: 'Dashboard', view: 'dashboard' },
+                    { icon: '📋', label: 'Compliance Records', view: 'compliance_records' },
+                    { icon: '📝', label: 'File Audit', view: 'file_audit' },
+                    { icon: '📊', label: 'Reports', view: 'reports' }
                 ]
             }
         };
+
+        /* --- DATA MANAGEMENT --- */
+        let trainings = JSON.parse(localStorage.getItem('trainings')) || [];
+        let enrollments = JSON.parse(localStorage.getItem('enrollments')) || [];
+        let hazards = JSON.parse(localStorage.getItem('hazards')) || [];
+        let incidents = JSON.parse(localStorage.getItem('incidents')) || [];
+        let audits = JSON.parse(localStorage.getItem('audits')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let inspections = JSON.parse(localStorage.getItem('inspections')) || [];
+        let complianceChecks = JSON.parse(localStorage.getItem('complianceChecks')) || [];
+        let programs = JSON.parse(localStorage.getItem('programs')) || [];
+        let complianceRecords = JSON.parse(localStorage.getItem('complianceRecords')) || [];
+        let reports = JSON.parse(localStorage.getItem('reports')) || [];
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        function saveData() {
+            localStorage.setItem('trainings', JSON.stringify(trainings));
+            localStorage.setItem('enrollments', JSON.stringify(enrollments));
+            localStorage.setItem('hazards', JSON.stringify(hazards));
+            localStorage.setItem('incidents', JSON.stringify(incidents));
+            localStorage.setItem('audits', JSON.stringify(audits));
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('inspections', JSON.stringify(inspections));
+            localStorage.setItem('complianceChecks', JSON.stringify(complianceChecks));
+            localStorage.setItem('programs', JSON.stringify(programs));
+            localStorage.setItem('complianceRecords', JSON.stringify(complianceRecords));
+            localStorage.setItem('reports', JSON.stringify(reports));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        // Sample data
+        if (trainings.length === 0) {
+            trainings.push({ id: 1, name: 'Safety Training 101', description: 'Basic safety procedures' });
+            trainings.push({ id: 2, name: 'Hazard Awareness', description: 'Identifying and reporting hazards' });
+        }
+        if (hazards.length === 0) {
+            hazards.push({ id: 1, type: 'Chemical Spill', location: 'Lab Section B', reporter: 'John Doe', status: 'critical', description: 'Spill in lab' });
+            hazards.push({ id: 2, type: 'Electrical Fault', location: 'Floor 2, Block A', reporter: 'Ravi Kumar', status: 'pending', description: 'Faulty wiring' });
+        }
+        if (programs.length === 0) {
+            programs.push({ id: 1, title: 'Workplace Safety Program', description: 'Comprehensive safety program', startDate: '2024-01-01', endDate: '2024-12-31', status: 'active' });
+        }
+        if (inspections.length === 0) {
+            inspections.push({ id: 1, officerId: 'Sara Singh', location: 'Floor 1', findings: 'Minor issues', date: '2024-04-01', status: 'completed' });
+        }
+        if (complianceRecords.length === 0) {
+            complianceRecords.push({ id: 1, entityId: 1, type: 'Hazard', result: 'Compliant', date: '2024-04-01', notes: 'Resolved' });
+        }
 
         /* --- CORE FUNCTIONS --- */
         function initApp(role, name) {
@@ -201,6 +286,25 @@
                 if(viewName === 'dashboard') renderDashboard();
                 else if(viewName === 'employees') renderEmployees();
                 else if(viewName === 'hazards') renderHazards();
+                else if(viewName === 'report_hazard') renderReportHazard();
+                else if(viewName === 'training') renderTraining();
+                else if(viewName === 'create_training') renderCreateTraining();
+                else if(viewName === 'report_incident') renderReportIncident();
+                else if(viewName === 'incidents') renderIncidents();
+                else if(viewName === 'view_hazards_incidents') renderViewHazardsIncidents();
+                else if(viewName === 'compliance_reports') renderComplianceReports();
+                else if(viewName === 'file_audit') renderFileAudit();
+                else if(viewName === 'users') renderUsers();
+                else if(viewName === 'programs') renderPrograms();
+                else if(viewName === 'inspections') renderInspections();
+                else if(viewName === 'compliance_checks') renderComplianceChecks();
+                else if(viewName === 'compliance_records') renderComplianceRecords();
+                else if(viewName === 'audits') renderAudits();
+                else if(viewName === 'reports') renderReports();
+                else if(viewName === 'performance') renderPerformance();
+                else if(viewName === 'reviews') renderReviews();
+                else if(viewName === 'compliance_monitoring') renderComplianceMonitoring();
+                else if(viewName === 'notifications') renderNotifications();
                 else container.innerHTML = `<div class="animate"><h2>${viewName.replace('_', ' ')} View</h2><p>Content for ${viewName} will be displayed here.</p></div>`;
             }, 300);
         }
@@ -208,6 +312,110 @@
         /* --- VIEW RENDERING --- */
         function renderDashboard() {
             const container = document.getElementById('viewContainer');
+            let stats = '';
+            if (currentUser.role === 'ADMIN') {
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-val">${users.length + 1}</div>
+                            <div style="color: var(--green); font-size: 12px;">Active</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--red)">
+                            <div class="stat-label">Active Hazards</div>
+                            <div class="stat-val">${hazards.filter(h => h.status !== 'resolved').length}</div>
+                            <div style="color: var(--red); font-size: 12px;">${hazards.filter(h => h.status === 'critical').length} Critical</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--green)">
+                            <div class="stat-label">Programs</div>
+                            <div class="stat-val">${programs.length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">Active</div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'EMPLOYEE') {
+                const myEnrollments = enrollments.filter(e => e.employeeId === currentUser.name);
+                const myHazards = hazards.filter(h => h.reporter === currentUser.name);
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">My Trainings</div>
+                            <div class="stat-val">${myEnrollments.length}</div>
+                            <div style="color: var(--green); font-size: 12px;">Enrolled</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--amber)">
+                            <div class="stat-label">Hazards Reported</div>
+                            <div class="stat-val">${myHazards.length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">By me</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--blue)">
+                            <div class="stat-label">Notifications</div>
+                            <div class="stat-val">${notifications.filter(n => n.userId === currentUser.name).length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">Unread</div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'SAFETY_OFFICER' || currentUser.role === 'HAZARD_OFFICER') {
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card" style="--blue: var(--red)">
+                            <div class="stat-label">Hazards</div>
+                            <div class="stat-val">${hazards.length}</div>
+                            <div style="color: var(--red); font-size: 12px;">${hazards.filter(h => h.status === 'critical').length} Critical</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--amber)">
+                            <div class="stat-label">Inspections</div>
+                            <div class="stat-val">${inspections.length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">Completed</div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'COMPLIANCE_OFFICER') {
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card" style="--blue: var(--green)">
+                            <div class="stat-label">Compliance Rate</div>
+                            <div class="stat-val">94%</div>
+                            <div style="color: var(--mist); font-size: 12px;">Across all sectors</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--blue)">
+                            <div class="stat-label">Audits Filed</div>
+                            <div class="stat-val">${audits.length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">This month</div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'MANAGER') {
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Programs</div>
+                            <div class="stat-val">${programs.length}</div>
+                            <div style="color: var(--green); font-size: 12px;">Active</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--amber)">
+                            <div class="stat-label">Training Completion</div>
+                            <div class="stat-val">85%</div>
+                            <div style="color: var(--mist); font-size: 12px;">Rate</div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'GOVERNMENT_AUDITOR') {
+                stats = `
+                    <div class="stats-grid">
+                        <div class="stat-card" style="--blue: var(--red)">
+                            <div class="stat-label">Non-Compliant</div>
+                            <div class="stat-val">${complianceRecords.filter(c => c.result !== 'Compliant').length}</div>
+                            <div style="color: var(--red); font-size: 12px;">Issues</div>
+                        </div>
+                        <div class="stat-card" style="--blue: var(--green)">
+                            <div class="stat-label">Reports Generated</div>
+                            <div class="stat-val">${reports.length}</div>
+                            <div style="color: var(--mist); font-size: 12px;">This month</div>
+                        </div>
+                    </div>
+                `;
+            }
             container.innerHTML = `
                 <div class="animate">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
@@ -217,38 +425,19 @@
                         </div>
                         <button class="btn btn-primary">+ Generate Report</button>
                     </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Total Employees</div>
-                            <div class="stat-val">248</div>
-                            <div style="color: var(--green); font-size: 12px;">↑ 12 this month</div>
-                        </div>
-                        <div class="stat-card" style="--blue: var(--red)">
-                            <div class="stat-label">Active Hazards</div>
-                            <div class="stat-val">17</div>
-                            <div style="color: var(--red); font-size: 12px;">3 Critical</div>
-                        </div>
-                        <div class="stat-card" style="--blue: var(--green)">
-                            <div class="stat-label">Compliance Rate</div>
-                            <div class="stat-val">94%</div>
-                            <div style="color: var(--mist); font-size: 12px;">Across all sectors</div>
-                        </div>
-                    </div>
-
+                    ${stats}
                     <div class="card">
                         <div class="card-header">
-                            <h2>Recent Hazard Reports</h2>
-                            <button class="btn btn-outline" style="font-size: 12px;">View All</button>
+                            <h2>Recent Activity</h2>
                         </div>
                         <table>
                             <thead>
-                                <tr><th>Type</th><th>Location</th><th>Reporter</th><th>Status</th></tr>
+                                <tr><th>Type</th><th>Details</th><th>Status</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td><strong>Chemical Spill</strong></td><td>Lab Section B</td><td>John Doe</td><td><span class="badge critical">Critical</span></td></tr>
-                                <tr><td>Electrical Fault</td><td>Floor 2, Block A</td><td>Ravi Kumar</td><td><span class="badge pending">Pending</span></td></tr>
-                                <tr><td>Slippery Floor</td><td>Cafeteria</td><td>Meena R</td><td><span class="badge resolved">Resolved</span></td></tr>
+                                ${hazards.slice(0,3).map(h => `<tr><td>Hazard</td><td>${h.type} by ${h.reporter}</td><td><span class="badge ${h.status === 'critical' ? 'critical' : h.status === 'resolved' ? 'resolved' : 'pending'}">${h.status}</span></td></tr>`).join('')}
+                                ${inspections.slice(0,3).map(i => `<tr><td>Inspection</td><td>${i.location} by ${i.officerId}</td><td><span class="badge resolved">${i.status}</span></td></tr>`).join('')}
+                                ${programs.slice(0,3).map(p => `<tr><td>Program</td><td>${p.title}</td><td><span class="badge resolved">${p.status}</span></td></tr>`).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -258,17 +447,674 @@
 
         function renderEmployees() {
             const container = document.getElementById('viewContainer');
+            const employees = ['John Doe', 'Priya Sharma', 'Ravi Kumar', 'Meena R', 'Sara Singh', 'Raj Kumar'];
             container.innerHTML = `
                 <div class="animate">
                     <h1 style="font-family:Syne; margin-bottom: 20px;">Employee Directory</h1>
                     <div class="card">
                         <table>
                             <thead>
-                                <tr><th>Name</th><th>Department</th><th>Status</th><th>Action</th></tr>
+                                <tr><th>Name</th><th>Department</th><th>Enrolled Trainings</th><th>Action</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td>John Doe</td><td>Operations</td><td><span class="badge resolved">Active</span></td><td><button class="btn btn-outline">Edit</button></td></tr>
-                                <tr><td>Priya Sharma</td><td>Engineering</td><td><span class="badge resolved">Active</span></td><td><button class="btn btn-outline">Edit</button></td></tr>
+                                ${employees.map(emp => {
+                                    const empEnrollments = enrollments.filter(e => e.employeeId === emp);
+                                    return `<tr><td>${emp}</td><td>Operations</td><td>${empEnrollments.length}</td><td><button class="btn btn-outline" onclick="enrollEmployee('${emp}')">Enroll in Training</button></td></tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function enrollEmployee(employeeId) {
+            const trainingId = prompt('Enter Training ID to enroll:');
+            if (trainingId && trainings.find(t => t.id == trainingId)) {
+                enrollments.push({ employeeId, trainingId });
+                saveData();
+                alert('Enrolled successfully!');
+                renderEmployees();
+            } else {
+                alert('Invalid Training ID');
+            }
+        }
+
+        function renderHazards() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Hazard Reports</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Type</th><th>Location</th><th>Reporter</th><th>Status</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                ${hazards.map(h => `<tr><td>${h.type}</td><td>${h.location}</td><td>${h.reporter}</td><td><span class="badge ${h.status === 'critical' ? 'critical' : h.status === 'resolved' ? 'resolved' : 'pending'}">${h.status}</span></td><td><button class="btn btn-outline" onclick="updateHazardStatus(${h.id}, 'resolved')">Resolve</button></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateHazardStatus(id, status) {
+            const hazard = hazards.find(h => h.id == id);
+            if (hazard) {
+                hazard.status = status;
+                saveData();
+                renderHazards();
+            }
+        }
+
+        function renderReportHazard() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Report a Hazard</h1>
+                    <div class="card">
+                        <form onsubmit="submitHazard(event)" style="padding: 20px;">
+                            <label style="display: block; margin-bottom: 15px;">
+                                Description: 
+                                <textarea id="hazardDesc" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;"></textarea>
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Location: 
+                                <input type="text" id="hazardLocation" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Date: 
+                                <input type="date" id="hazardDate" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <button type="submit" class="btn btn-primary">Report Hazard</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitHazard(event) {
+            event.preventDefault();
+            const type = document.getElementById('hazardDesc').value;
+            const location = document.getElementById('hazardLocation').value;
+            const description = document.getElementById('hazardDate').value;
+            hazards.push({ id: Date.now(), type, location, reporter: currentUser.name, status: 'pending', description });
+            saveData();
+            alert('Hazard reported!');
+            switchView('dashboard');
+        }
+
+        function renderTraining() {
+            const container = document.getElementById('viewContainer');
+            const myTrainings = enrollments.filter(e => e.employeeName === currentUser.name);
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">My Trainings</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Program</th><th>Completion Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${myTrainings.map(t => `<tr><td>${t.programName}</td><td>${t.completionDate || 'N/A'}</td><td><span class="badge resolved">${t.status || 'Enrolled'}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCreateTraining() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Create Training Program</h1>
+                    <div class="card">
+                        <form onsubmit="createTraining(event)">
+                            <label>Name: <input type="text" id="trainingName" required></label><br>
+                            <label>Description: <textarea id="trainingDesc" required></textarea></label><br>
+                            <button type="submit" class="btn btn-primary">Create Training</button>
+                        </form>
+                    </div>
+                    <h2>Existing Trainings</h2>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th>Name</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                ${trainings.map(t => `<tr><td>${t.id}</td><td>${t.name}</td><td>${t.description}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTraining(event) {
+            event.preventDefault();
+            const name = document.getElementById('trainingName').value;
+            const description = document.getElementById('trainingDesc').value;
+            trainings.push({ id: Date.now(), name, description });
+            saveData();
+            alert('Training created!');
+            renderCreateTraining();
+        }
+
+        function renderReportIncident() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Report an Incident</h1>
+                    <div class="card">
+                        <form onsubmit="submitIncident(event)">
+                            <label>Type: <input type="text" id="incidentType" required></label><br>
+                            <label>Location: <input type="text" id="incidentLocation" required></label><br>
+                            <label>Description: <textarea id="incidentDesc" required></textarea></label><br>
+                            <button type="submit" class="btn btn-primary">Submit Report</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitIncident(event) {
+            event.preventDefault();
+            const type = document.getElementById('incidentType').value;
+            const location = document.getElementById('incidentLocation').value;
+            const description = document.getElementById('incidentDesc').value;
+            incidents.push({ id: Date.now(), type, location, reporter: currentUser.name, description });
+            saveData();
+            alert('Incident reported!');
+            switchView('dashboard');
+        }
+
+        function renderIncidents() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Incidents</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Type</th><th>Location</th><th>Reporter</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                ${incidents.map(i => `<tr><td>${i.type}</td><td>${i.location}</td><td>${i.reporter}</td><td>${i.description}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderViewHazardsIncidents() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Hazards & Incidents</h1>
+                    <h2>Hazards</h2>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Type</th><th>Location</th><th>Reporter</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${hazards.map(h => `<tr><td>${h.type}</td><td>${h.location}</td><td>${h.reporter}</td><td><span class="badge ${h.status === 'critical' ? 'critical' : h.status === 'resolved' ? 'resolved' : 'pending'}">${h.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2>Incidents</h2>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Type</th><th>Location</th><th>Reporter</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                ${incidents.map(i => `<tr><td>${i.type}</td><td>${i.location}</td><td>${i.reporter}</td><td>${i.description}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderComplianceReports() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Compliance Reports</h1>
+                    <div class="card">
+                        <button class="btn btn-primary" onclick="generateReport()">Generate Compliance Report</button>
+                        <div id="reportContent" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateReport() {
+            const content = document.getElementById('reportContent');
+            content.innerHTML = `
+                <h3>Compliance Report - ${new Date().toLocaleDateString()}</h3>
+                <p>Total Employees: 248</p>
+                <p>Active Hazards: ${hazards.filter(h => h.status !== 'resolved').length}</p>
+                <p>Compliance Rate: 94%</p>
+                <p>Trainings: ${trainings.length}</p>
+                <p>Audits Filed: ${audits.length}</p>
+            `;
+        }
+
+        function renderFileAudit() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">File Audit</h1>
+                    <div class="card">
+                        <form onsubmit="submitAudit(event)" style="padding: 20px;">
+                            <label style="display: block; margin-bottom: 15px;">
+                                Scope: 
+                                <select id="auditScope" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                                    <option>INDIVIDUAL_STATION</option>
+                                    <option>SECTIONAL</option>
+                                    <option>DEPARTMENTAL</option>
+                                    <option>ORGANIZATIONAL</option>
+                                </select>
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Findings: 
+                                <textarea id="auditFindings" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;"></textarea>
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Date: 
+                                <input type="date" id="auditDate" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <button type="submit" class="btn btn-primary">File Audit</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitAudit(event) {
+            event.preventDefault();
+            const auditScope = document.getElementById('auditScope').value;
+            const auditFinding = document.getElementById('auditFindings').value;
+            const auditDate = document.getElementById('auditDate').value;
+            
+            fetch(`${API_BASE_URL}/audit/createAudit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentUser.token}`
+                },
+                body: JSON.stringify({ auditScope, auditFinding, auditDate, auditStatus: 'Open' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Audit filed successfully!');
+                renderFileAudit();
+            })
+            .catch(err => alert('Error: ' + err.message));
+        }
+
+        function renderUsers() {
+            const container = document.getElementById('viewContainer');
+            const dummyUsers = [
+                { id: 1, name: 'John Doe', email: 'john@company.com', contact: '555-0101', role: 'EMPLOYEE', status: 'Active' },
+                { id: 2, name: 'Sara Singh', email: 'sara@company.com', contact: '555-0102', role: 'SAFETY_OFFICER', status: 'Active' },
+                { id: 3, name: 'Raj Kumar', email: 'raj@company.com', contact: '555-0103', role: 'HAZARD_OFFICER', status: 'Active' },
+                { id: 4, name: 'Alex Lee', email: 'alex@company.com', contact: '555-0104', role: 'COMPLIANCE_OFFICER', status: 'Active' }
+            ];
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">User Management</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Name</th><th>Email</th><th>Contact</th><th>Role</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${dummyUsers.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.contact}</td><td>${u.role}</td><td><span class="badge resolved">${u.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPrograms() {
+            const container = document.getElementById('viewContainer');
+            const programList = programs.length > 0 ? programs : [
+                { id: 'P001', name: 'First Aid Training', description: 'Basic first aid and emergency response', duration: '8 hours', status: 'Active' },
+                { id: 'P002', name: 'Fire Safety', description: 'Fire prevention and evacuation procedures', duration: '4 hours', status: 'Active' },
+                { id: 'P003', name: 'OSHA Compliance', description: 'OSHA standards and compliance', duration: '16 hours', status: 'Active' }
+            ];
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Workplace Safety Programs</h1>
+                    ${currentUser.role === 'ADMIN' ? `
+                        <div class="card" style="margin-bottom: 20px;">
+                            <button class="btn btn-primary" onclick="showCreateProgram()">+ Create Program</button>
+                        </div>
+                    ` : ''}
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Title</th><th>Description</th><th>Duration</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${programList.map(p => `<tr><td>${p.name}</td><td>${p.description}</td><td>${p.duration}</td><td><span class="badge resolved">${p.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                `;
+            })
+            .catch(err => {
+                container.innerHTML = `<div class="animate"><h2>Error loading programs</h2><p>${err.message}</p></div>`;
+            });
+        }
+
+        function showCreateProgram() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Create Program</h1>
+                    <div class="card">
+                        <form onsubmit="submitProgram(event)" style="padding: 20px;">
+                            <label style="display: block; margin-bottom: 15px;">
+                                Title: 
+                                <input type="text" id="programTitle" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Description: 
+                                <textarea id="programDesc" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;"></textarea>
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Start Date: 
+                                <input type="date" id="programStartDate" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                End Date: 
+                                <input type="date" id="programEndDate" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <button type="submit" class="btn btn-primary">Create Program</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitProgram(event) {
+            event.preventDefault();
+            const programTitle = document.getElementById('programTitle').value;
+            const programDescription = document.getElementById('programDesc').value;
+            const programStartDate = document.getElementById('programStartDate').value;
+            const programEndDate = document.getElementById('programEndDate').value;
+            
+            fetch(`${API_BASE_URL}/programs/createprogram`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentUser.token}`
+                },
+                body: JSON.stringify({ programTitle, programDescription, programStartDate, programEndDate, programStatus: 'PLANNED' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Program created successfully!');
+                renderPrograms();
+            })
+            .catch(err => alert('Error: ' + err.message));
+        }
+
+        function renderInspections() {
+            const container = document.getElementById('viewContainer');
+            const inspectionList = inspections.length > 0 ? inspections : [
+                { id: 'I001', location: 'Warehouse A', findings: 'Clear exit routes', date: '2024-01-15', status: 'Completed' },
+                { id: 'I002', location: 'Office Floor 2', findings: 'Missing fire extinguisher', date: '2024-01-14', status: 'Open' },
+                { id: 'I003', location: 'Laboratory', findings: 'All equipment safe', date: '2024-01-13', status: 'Completed' }
+            ];
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Safety Inspections</h1>
+                    ${currentUser.role === 'SAFETY_OFFICER' ? `
+                        <div class="card" style="margin-bottom: 20px;">
+                            <button class="btn btn-primary" onclick="showCreateInspection()">+ Create Inspection</button>
+                        </div>
+                    ` : ''}
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Location</th><th>Findings</th><th>Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${inspectionList.map(i => `<tr><td>${i.location}</td><td>${i.findings}</td><td>${i.date}</td><td><span class="badge resolved">${i.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                `;
+            })
+            .catch(err => {
+                container.innerHTML = `<div class="animate"><h2>Error loading inspections</h2><p>${err.message}</p></div>`;
+            });
+        }
+
+        function showCreateInspection() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Create Inspection</h1>
+                    <div class="card">
+                        <form onsubmit="submitInspection(event)" style="padding: 20px;">
+                            <label style="display: block; margin-bottom: 15px;">
+                                Location: 
+                                <input type="text" id="inspectionLocation" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Findings: 
+                                <textarea id="inspectionFindings" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;"></textarea>
+                            </label>
+                            <label style="display: block; margin-bottom: 15px;">
+                                Date: 
+                                <input type="date" id="inspectionDate" required style="width: 100%; padding: 8px; border: 1px solid var(--fog); border-radius: 4px;">
+                            </label>
+                            <button type="submit" class="btn btn-primary">Create Inspection</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitInspection(event) {
+            event.preventDefault();
+            const inspectionLocation = document.getElementById('inspectionLocation').value;
+            const inspectionFindings = document.getElementById('inspectionFindings').value;
+            const inspectionDate = document.getElementById('inspectionDate').value;
+            
+            fetch(`${API_BASE_URL}/inspections/createInspection`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentUser.token}`
+                },
+                body: JSON.stringify({ inspectionLocation, inspectionFindings, inspectionDate, inspectionStatus: 'COMPLETED', officerId: currentUser.userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Inspection created successfully!');
+                renderInspections();
+            })
+            .catch(err => alert('Error: ' + err.message));
+        }
+
+        function renderComplianceChecks() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Compliance Checks</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Inspection ID</th><th>Result</th><th>Notes</th><th>Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${complianceChecks.map(c => `<tr><td>${c.inspectionId}</td><td>${c.result}</td><td>${c.notes}</td><td>${c.date}</td><td><span class="badge resolved">${c.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderComplianceRecords() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Compliance Records</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Entity ID</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr>
+                            </thead>
+                            <tbody>
+                                ${complianceRecords.map(c => `<tr><td>${c.entityId}</td><td>${c.type}</td><td>${c.result}</td><td>${c.date}</td><td>${c.notes}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAudits() {
+            const container = document.getElementById('viewContainer');
+            const auditList = audits.length > 0 ? audits : [
+                { id: 'A001', scope: 'Workplace Safety Standards', findings: 'Compliant', date: '2024-01-10', status: 'Passed' },
+                { id: 'A002', scope: 'Fire Safety Equipment', findings: 'Minor deficiencies', date: '2024-01-08', status: 'Conditionally Passed' },
+                { id: 'A003', scope: 'Emergency Procedures', findings: 'Satisfactory', date: '2024-01-05', status: 'Passed' }
+            ];
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Audits</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Scope</th><th>Findings</th><th>Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${auditList.map(a => `<tr><td>${a.scope}</td><td>${a.findings}</td><td>${a.date}</td><td><span class="badge resolved">${a.status}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderReports() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Reports & Analytics</h1>
+                    <div class="card">
+                        <button class="btn btn-primary" onclick="generateAnalyticsReport()">Generate Analytics Report</button>
+                        <div id="analyticsContent" style="margin-top: 20px;"></div>
+                    </div>
+                    <h2>Generated Reports</h2>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Scope</th><th>Metrics</th><th>Generated Date</th></tr>
+                            </thead>
+                            <tbody>
+                                ${reports.map(r => `<tr><td>${r.scope}</td><td>${r.metrics}</td><td>${r.generatedDate}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateAnalyticsReport() {
+            const content = document.getElementById('analyticsContent');
+            content.innerHTML = `
+                <h3>Analytics Report - ${new Date().toLocaleDateString()}</h3>
+                <p>Hazards Resolution Time: 2.5 days avg</p>
+                <p>Training Completion Rate: 85%</p>
+                <p>Compliance Adherence: 94%</p>
+                <p>Inspections Completed: ${inspections.length}</p>
+            `;
+        }
+
+        function renderPerformance() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Performance Monitoring</h1>
+                    <div class="card">
+                        <h3>Key Metrics</h3>
+                        <p>Training Completion: 85%</p>
+                        <p>Hazard Response Time: 4 hours avg</p>
+                        <p>Compliance Score: 94%</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderReviews() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Compliance Reviews</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Entity</th><th>Review Type</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Hazard Management</td><td>Annual Review</td><td><span class="badge resolved">Passed</span></td></tr>
+                                <tr><td>Training Programs</td><td>Quarterly Review</td><td><span class="badge resolved">Passed</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderComplianceMonitoring() {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Compliance Monitoring</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Area</th><th>Compliance Level</th><th>Last Check</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Safety Protocols</td><td>95%</td><td>2024-04-01</td></tr>
+                                <tr><td>Training Records</td><td>90%</td><td>2024-03-15</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('viewContainer');
+            const myNotifications = notifications.filter(n => n.userId === currentUser.name);
+            container.innerHTML = `
+                <div class="animate">
+                    <h1 style="font-family:Syne; margin-bottom: 20px;">Notifications</h1>
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr><th>Message</th><th>Category</th><th>Status</th><th>Date</th></tr>
+                            </thead>
+                            <tbody>
+                                ${myNotifications.map(n => `<tr><td>${n.message}</td><td>${n.category}</td><td><span class="badge ${n.status === 'read' ? 'resolved' : 'pending'}">${n.status}</span></td><td>${n.createdDate}</td></tr>`).join('')}
                             </tbody>
                         </table>
                     </div>
