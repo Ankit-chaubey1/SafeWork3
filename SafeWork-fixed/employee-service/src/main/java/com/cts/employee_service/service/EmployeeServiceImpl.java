@@ -1,0 +1,124 @@
+package com.cts.employee_service.service;
+
+import com.cts.employee_service.client.HazardClient;
+import com.cts.employee_service.client.TrainingClient;
+import com.cts.employee_service.client.UserClient;
+import com.cts.employee_service.dto.EmployeeResponseDTO;
+import com.cts.employee_service.dto.HazardDTO;
+import com.cts.employee_service.dto.TrainingDTO;
+import com.cts.employee_service.dto.UserPublicDto;
+import com.cts.employee_service.entities.Employee;
+import com.cts.employee_service.entities.EmployeeDocument;
+import com.cts.employee_service.enums.EmployeeStatus;
+import com.cts.employee_service.enums.UserRole;
+import com.cts.employee_service.repositories.EmployeeRepository;
+import com.cts.employee_service.security.JwtProvider;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+public class EmployeeServiceImpl implements IEmployeeService {
+
+    @Autowired private EmployeeRepository employeeRepository;
+    @Autowired private HazardClient hazardClient;
+    @Autowired private TrainingClient trainingClient;
+    @Autowired private JwtProvider jwtProvider;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserClient userClient;
+
+    private EmployeeResponseDTO mapToDTO(Employee emp) {
+        EmployeeResponseDTO dto = new EmployeeResponseDTO();
+        dto.setEmployeeId(emp.getEmployeeId());
+        dto.setEmployeeName(emp.getEmployeeName());
+        dto.setEmail(emp.getEmail());
+        dto.setEmployeeDepartmentName(emp.getEmployeeDepartmentName());
+        dto.setEmployeeStatus(emp.getEmployeeStatus().toString());
+        return dto;
+    }
+
+    @Override
+    public List<EmployeeResponseDTO> getAllEmployees() {
+        return employeeRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeResponseDTO getEmployeeById(long id) {
+        Employee emp = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + id));
+        return mapToDTO(emp);
+    }
+
+    @Override
+    @Transactional
+    public Employee registerEmployee(Employee employee) {
+        log.info("Registering employee: {}", employee.getEmail());
+
+        if (employeeRepository.findByEmail(employee.getEmail()).isPresent()) {
+            throw new RuntimeException("Employee with email " + employee.getEmail() + " already exists");
+        }
+
+        String rawPassword = employee.getPassword();
+        employee.setPassword(passwordEncoder.encode(rawPassword));
+        employee.setEmployeeStatus(EmployeeStatus.ACTIVE);
+
+        Employee saved = employeeRepository.save(employee);
+        log.info("Employee saved with ID: {}", saved.getEmployeeId());
+
+        // Create corresponding User record in User Service (raw password forwarded, User Service encodes it)
+        UserPublicDto userDto = new UserPublicDto();
+        userDto.setUserName(employee.getEmployeeName());
+        userDto.setUserEmail(employee.getEmail());
+        userDto.setPassword(rawPassword);
+        userDto.setUserRole(UserRole.EMPLOYEE);
+        userDto.setUserContact(employee.getEmployeeContact());
+
+        try {
+            userClient.createUser(userDto);
+            log.info("User record created in User Service for: {}", employee.getEmail());
+        } catch (Exception e) {
+            log.error("Failed to sync user to User Service: {}. Employee still saved.", e.getMessage());
+        }
+
+        return saved;
+    }
+
+    @Override
+    public String loginEmployee(String email, String password) {
+        throw new UnsupportedOperationException(
+            "Login is handled by User Service. Use POST /users/login with your employee email and password.");
+    }
+
+    @Override
+    public HazardDTO reportHazard(HazardDTO hazardDTO) {
+        if (!employeeRepository.existsById(hazardDTO.getEmployeeId())) {
+            throw new RuntimeException("Employee ID " + hazardDTO.getEmployeeId() + " not found.");
+        }
+        return hazardClient.createHazard(hazardDTO.getEmployeeId(), hazardDTO);
+    }
+
+    @Override
+    public List<HazardDTO> getHazardsByEmployee(long employeeId) {
+        if (!employeeRepository.existsById(employeeId)) throw new RuntimeException("Employee not found.");
+        return hazardClient.getHazardsByEmployee(employeeId);
+    }
+
+    @Override
+    public List<TrainingDTO> getTrainingsByEmployee(long employeeId) {
+        if (!employeeRepository.existsById(employeeId)) throw new RuntimeException("Employee not found.");
+        return trainingClient.getTrainingsByEmployee(employeeId);
+    }
+
+    @Override
+    public EmployeeDocument getEmployeeDocument(long employeeId) {
+        Employee emp = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found."));
+        return emp.getDocument();
+    }
+}
